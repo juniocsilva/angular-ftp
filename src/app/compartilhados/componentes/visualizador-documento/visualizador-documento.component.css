@@ -1,0 +1,118 @@
+fieldset {
+    margin-top: 5px !important;
+}
+
+legend {
+    font-size: 15px !important;
+}
+
+.btn-reclassificar, .btn-categorizar {
+    margin-bottom: 10px;
+}
+
+.pointer {cursor: pointer;}
+.progress {cursor: progress;}
+
+.ui-datatable-data{
+    text-align: center;
+}
+
+.dt-head-caixa {
+   font-size: 140%;
+}
+
+.table-form{
+    margin-top: 20px;
+   
+}
+
+.row.tabela {
+    width: 98% !important;
+    margin: 0px;
+}
+
+.btn-group {
+    margin-bottom: 10px;
+    max-height: 44px;
+}
+.btn-navega {
+    background-color: #0a6e96;
+    color: #fdfdfd;
+    margin-top: 15px;
+    border: none;
+
+}
+
+.btn-navega:hover, .btn-navega:focus, .btn-navega:active {
+    background-color: #06425b;
+    color: #fdfdfd;
+
+}
+
+.btn-novo-doc {
+    background-color:#034f8a;
+    text-decoration-color: #ffffff;
+    color: white ;
+    width: 15%;
+    height: 30px;
+    margin-left: 10px;
+    font-style: normal;
+    font-size: 14px !important;
+    padding: 0px;
+}
+
+a.ui-paginator-first {
+    display:none !important;
+}
+
+a.ui-paginator-last {
+    display:none !important;
+}
+
+a.ui-paginator-prev, a.ui-paginator-next {
+    padding: 3px 10px 3px 10px !important;
+    background-color:rgb(250,250,250) !important;
+    color: rgb(0,0,0);
+    margin: 0px !important;
+    border-radius: 0px !important;
+    margin-top: 0px !important;
+}
+
+
+a.ui-paginator-page {
+    padding: 3px 10px 3px 10px !important;
+    background-color:rgb(250,250,250) !important;
+    color: rgb(0,0,0);
+    margin: 0px !important;
+    border-radius: 0px !important;
+}
+a.ui-paginator-page.ui-state-active {
+    background-color:rgb(51,122,183) !important;
+    margin: 0px !important;
+}
+
+span.ui-paginator-pages {
+    padding: 0px !important;
+    
+}
+
+span.fa.fa-forward, span.fa.fa-backward {
+    font-family: sans-serif;
+    font-size: 15px;
+  
+}
+
+span.fa-forward:before {
+    content: "\50\72\f3\78\69\6d\6f" !important;
+}
+
+span.fa-backward:before {
+    content: "\41\6e\74\65\72\69\6f\72" !important;
+}
+
+.imagem-extracao {
+    max-width: 800px;
+    max-height: 515px;
+    overflow-x: auto;
+    overflow-y: auto;
+}

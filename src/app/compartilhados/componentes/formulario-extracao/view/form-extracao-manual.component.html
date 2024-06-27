@@ -1,0 +1,78 @@
+  <div class="box-body no-padding">
+    <section class="content">
+      <div class="col-md-12 no-padding">
+        
+            <form #f="ngForm" class="form-horizontal col-md-12">
+                <div *ngIf="exibirMensagem" class="alert alert-{{tipoMensagem}} alert-dismissible col-md-12">
+                    <h4><i class="fa fa-{{tipoIcone}}"></i>&nbsp;&nbsp;Atenção!</h4>
+                        {{ mensagem }}
+                </div>
+                <div class="col-md-12 form-extracao">
+                    <div class="form-group" [formGroup]="form" *ngFor="let question of questions">
+                        
+                        <label [attr.for]="question.key">{{question.label}}</label>
+
+                        <div [ngSwitch]="question.controlType">
+                            <input *ngSwitchCase="'data'" [formControlName]="question.key" [value]="form.get(question.key).value | formataData"
+                                [id]="question.key" [required]="question.required" [name]="question.key" [type]="question.type"  
+                                placeholder="99/99/9999" minlength="10" maxlength="10" somenteNumeros focoAutomatico [ordem]="question.order">                      
+
+                            <input *ngSwitchCase="'cpf'" [formControlName]="question.key" [value]="form.get(question.key).value | formataCpf"
+                                [id]="question.key" [required]="question.required" [name]="question.key" [type]="question.type"  
+                                placeholder="999.999.999-99" minlength="14" maxlength="14" somenteNumeros focoAutomatico [ordem]="question.order">
+
+                            <input *ngSwitchCase="'cnpj'" [formControlName]="question.key" [value]="form.get(question.key).value | formataCnpj"
+                                [id]="question.key" [required]="question.required" [name]="question.key" [type]="question.type"  
+                                placeholder="99.999.999/9999-99" minlength="18" maxlength="18" somenteNumeros focoAutomatico [ordem]="question.order">
+
+                            <input *ngSwitchCase="'cpfcnpj'" [formControlName]="question.key" [value]="form.get(question.key).value | formataCpfCnpj"
+                                [id]="question.key" [required]="question.required" [name]="question.key" [type]="question.type"  
+                                placeholder="CPF ou CNPJ" minlength="14" maxlength="18" somenteNumeros focoAutomatico [ordem]="question.order">
+                            
+                            <input *ngSwitchCase="'textbox'" [formControlName]="question.key"
+                                    [id]="question.key" [required]="question.required" [name]="question.key" [type]="question.type" size="50" 
+                                    focoAutomatico [ordem]="question.order">
+                        
+                            <input *ngSwitchCase="'number'" [formControlName]="question.key" somenteNumeros focoAutomatico [ordem]="question.order"
+                                    [id]="question.key" [required]="question.required" [name]="question.key" [type]="question.type" size="50">
+                            
+
+                            <textarea *ngSwitchCase="'textarea'" [formControlName]="question.key" style="min-height: 8em; min-width: 24em"
+                                    [id]="question.key" [required]="question.required" [name]="question.key" size="50" 
+                                    focoAutomatico [ordem]="question.order" [value]="form.get(question.key).value">
+                            </textarea>                                    
+
+                            <select [id]="question.key" [name]="question.key" *ngSwitchCase="'select'" [formControlName]="question.key" 
+                                focoAutomatico [ordem]="question.order">
+                                <option *ngFor="let opt of question.options" [value]="opt.key">{{opt.value}}</option>
+                            </select>
+                            
+                            <select [id]="question.key" [name]="question.key" *ngSwitchCase="'select_sn'" [formControlName]="question.key"
+                                focoAutomatico [ordem]="question.order">
+                                    <option value="N">Não</option>
+                                    <option value="S">Sim</option>
+                            </select>
+                            <select [id]="question.key" [name]="question.key" *ngSwitchCase="'select_vf'" [formControlName]="question.key" 
+                                focoAutomatico [ordem]="question.order">
+                                    <option value="F">Falso</option>
+                                    <option value="V">Verdadeiro</option>
+                            </select>
+
+                            <input *ngSwitchCase="'telefone_ddd'" [formControlName]="question.key" [value]="form.get(question.key).value | formataTelefoneDDD"
+                                [id]="question.key" [required]="question.required" [name]="question.key" [type]="question.type" focoAutomatico [ordem]="question.order"
+                                placeholder="(99)99999-9999" minlength="14" maxlength="15" somenteNumeros>
+
+                            <input *ngSwitchCase="'email'" [formControlName]="question.key" email="true" focoAutomatico [ordem]="question.order"
+                                [id]="question.key" [required]="question.required" [name]="question.key" [type]="question.type" size="50">
+
+                        </div> 
+                        <div id="" class="errorMessage" *ngIf="!isValid(question.key, question.type) && isTouched(question.key)">{{question.label}}: {{mensValida}}</div>
+                        
+                    </div>
+                </div>
+            </form>
+        
+      </div>
+    </section>
+  </div>
+

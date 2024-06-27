@@ -1,0 +1,120 @@
+ <!-- Main content -->
+  <section class="content">
+      <a id='dwnldLnk' download='conteudo_arquivo' style="display:none;"> </a>
+    <div class="row">
+      <!-- left column -->
+      <div class="col-md-12">
+        <!-- general form elements -->
+        <div class="box box-primary">
+          <div class="box-header with-border">
+            <h3 class="box-title">PPD - File Transfer Protocol</h3>
+          </div>
+          <!-- /.box-header -->
+          <!-- form start -->
+          <form role="form">
+            <div class="box-body">
+              <div class="container ">
+                  <div *ngIf="exibirMensagem" class="alert alert-{{ tipoMensagem }} col-md-11" role="danger">
+                      {{mensagem}}
+                  </div> 
+                <button style="margin-left: 15px; margin-bottom: 8px" type="button" data-toggle="modal" data-target="#incluir" name="novo" (click)="abrirModal(f)" class="btn btn-primary">Novo Arquivo</button>
+                <br/>
+                  <div class="ui-widget-header col-md-5" style="margin: 15px;padding:4px 10px;border-bottom: 0 none">
+                    <i class="fa fa-search" style="margin:10px 10px 10px 10px"></i>
+                    <input #gb type="text" pInputText size="50" placeholder="Filtrar">
+                  </div>   
+                  <p-dataTable [value] = "itens" class="col-md-11" emptyMessage="Não existem dados cadastrados" 
+                  [globalFilter]="gb" #dt [rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,15,20]">
+                    <p-column field="id" header="ID" [style]="{'width':'5%'}" sortable="true"></p-column>
+                    <p-column field="nome_arquivo" header="Nome Arquivo" [style]="{'width':'30%'}" sortable="true"></p-column>
+                    <p-column field="mimetype" header="Mime-Type" [style]="{'width':'30%'}" sortable="true"></p-column>
+                    <p-column field="tamanho" header="Tamanho (bytes)" [style]="{'width':'15%','text-align':'right'}" sortable="true"></p-column>
+                    <p-column field="data" header="Data Alteração" [style]="{'width':'20%','text-align':'center'}" sortable="true"></p-column>
+                    <p-column header="Ações" [style]="{'width':'10%'}">
+                        <ng-template let-col let-dados="rowData" pTemplate="body">
+                          <a name="btn-excluir" class="btn btn-link btn-xs" (click)="excluir(dados,f)" 
+                            title="Excluir Arquivo" rel="tooltip" data-placement="top">
+                            <span class="glyphicon glyphicon-trash"></span>
+                          </a>
+                          <!--
+                          <a name="btn-alterar" class="btn btn-link btn-xs" (click)="alterar(dados)" data-toggle="modal" data-target="#incluir"
+                            title="Alterar Arquivo" rel="tooltip" data-placement="top">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                          </a>
+                        -->
+                          <a name="btn-download" class="btn btn-link btn-xs" (click)="download(dados)"
+                          title="Download" rel="tooltip" data-placement="top">
+                          <span class="glyphicon glyphicon-download"></span>
+                        </a>
+                        </ng-template>
+                    </p-column>
+                  </p-dataTable>
+        
+                  <p-confirmDialog header="Confirmação" icon="fa fa-question-circle" width="425" #cd>
+                    <p-footer>
+                      <button type="button" pButton icon="fa-close" label="Não" (click)="cd.reject()"></button>
+                      <button type="button" pButton icon="fa-check" label="Sim" (click)="cd.accept()"></button>
+                    </p-footer>
+                  </p-confirmDialog>
+                </div>
+              </div>
+        
+              <div #jModal class="modal fade" id="incluir" tabindex="-1" data-keyboard="false" data-backdrop="static">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title">{{tituloModal}}</h4>
+                    </div>
+                    <div class="modal-body">
+                      <div class="box-body">
+                        
+                        <form #f="ngForm" id="Crud" name="Crud">
+                          <p-messages [(value)]="msgs"></p-messages>
+                          <div class="form-group">
+                              
+                              <div class="pull-right row novoDocumento" style="margin-right: 18px" >
+                                <input id="inputDocument" type="file" style="display:none" #inputFile (change)="fileChanged($event)"
+                                  ng2FileSelect [uploader]="uploader">
+                                <a  class="btn btn-success btn-xs" (click)="insertDocuments(inputFile)">Novo Arquivo</a>
+                              </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="nome">Nome Arquivo (Máximo 50 MB):</label>
+                            <input disabled class="form-control" id="nome" [(ngModel)]="nome_arquivo" name="nome" 
+                              placeholder="Nome Arquivo" required #nome="ngModel" minlength="5" maxlength="255">
+                          </div>
+                          <div class="form-group">
+                            <label for="tipo">Tipo Arquivo:</label>
+                            <input disabled class="form-control" id="tipo" [(ngModel)]="mimetype" name="tipo" 
+                              placeholder="Tipo Arquivo"  #tipo="ngModel" minlength="5" maxlength="255">
+                          </div>
+                          <div class="form-group">
+                            <label for="dataAlt">Data Última Alteração:</label>
+                            <input disabled class="form-control" id="dataAlt" [(ngModel)]="data_alteracao" name="dataAlt" 
+                              placeholder="Data Alteração"  #dataAlt="ngModel" minlength="5" maxlength="255">
+                          </div>
+                          <div class="form-group">
+                            <label for="tamanho">Nome Arquivo (bytes):</label>
+                            <input disabled class="form-control" id="tamanho" [(ngModel)]="tamanho_arquivo" name="tamanho" 
+                              placeholder="Tamanho Arquivo"  #tamanho="ngModel" minlength="5" maxlength="255">
+                          </div>
+                      
+                        </form>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-link" data-dismiss="modal">Cancelar</button>
+                          <button type="button" name="submitModal" (click)="salvar(f)" [disabled]="nao_leu_arquivo" class="btn btn-primary">Gravar</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                 </div> 
+            </div>
+            <!-- /.box-body -->
+          </form>
+        </div>
+        <!-- /.box -->
+      </div>
+    </div>
+    <!-- /.row -->
+  </section>
+  <!-- /.content -->

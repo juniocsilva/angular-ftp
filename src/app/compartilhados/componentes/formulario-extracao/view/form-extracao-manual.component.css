@@ -1,0 +1,28 @@
+.modal-backdrop {
+    z-index: -1;
+}
+
+.form-extracao {
+    max-height: 350px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.imagem-extracao {
+    max-width: 800px;
+    max-height: 515px;
+    overflow-x: auto;
+    overflow-y: auto;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.errorMessage {
+    color: red;
+}
+
+.botoes {
+    margin-top: 10px;
+}

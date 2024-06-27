@@ -1,0 +1,25 @@
+<div class="wrapper">
+    <ng4-loading-spinner> </ng4-loading-spinner>
+    <!-- Main Header -->
+    <app-cabecalho></app-cabecalho>
+    <!-- Left side column. contains the logo and sidebar -->
+    <app-sidebar-direita></app-sidebar-direita>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      <section class="content container-fluid">
+        <router-outlet></router-outlet>
+      </section>
+    <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+  
+    <app-rodape></app-rodape>
+  
+    <!-- Control Sidebar -->
+    <app-sidebar-esquerda></app-sidebar-esquerda>
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+    immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+  </div>
+  

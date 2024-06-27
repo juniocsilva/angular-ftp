@@ -1,0 +1,270 @@
+<div class="cx-page box box-primary">
+  <cx-alert-message [messagesInfo]="messagesInfo" [messagesSuccess]="messagesSuccess" [messagesError]="messagesError" (onCloseMessageInfo)="onCloseMessageInfo()"
+  (onCloseMessageError)="onCloseMessageError()" (onCloseMessageSuccess)="onCloseMessageSuccess()" [messagesWarning]="messagesWarning"
+  (onCloseMessageWarning)="onCloseMessageWarning()"></cx-alert-message>
+ 
+  <div [(class)]="larguraTabela">
+      <div class="text-center" *ngIf="currentImage != null && exibirImg">
+        <div class="btn-group" role="group" aria-label="..." style="text-align:center">
+          <button type="button" class="btn btn-default btn-navega" (click)="fazerCategorizacao()" title="Categorizar" rel="tooltip" *ngIf="currentImage != null">
+              <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-default btn-navega" (click)="zoomUp()" title="Zoom+" rel="tooltip" *ngIf="currentImage != null && !diminuiu">
+            <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-default btn-navega" (click)="zoomDown()" title="Zoom-" rel="tooltip" *ngIf="currentImage != null && !diminuiu">
+            <span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
+          </button>
+          
+          <button type="button" class="btn btn-default btn-navega" (click)="turnLeft()" title="Girar Esquerda" rel="tooltip" >
+            <span class="glyphicon glyphicon-hand-left" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-default btn-navega" (click)="turnRight()" title="Girar Direita" rel="tooltip" >
+            <span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-default btn-navega" (click)="showDefault()" title="Mostrar Padrão" rel="tooltip">
+            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+          </button>
+          <!--
+          <button *ngIf="perfilLeitura" type="button" class="btn btn-default btn-navega" (click)="downloadArquivo()" title="Dowload" rel="tooltip">
+            <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+          </button>
+        -->
+          <button type="button" class="btn btn-default btn-navega" (click)="limparImagem()" title="Limpar" rel="tooltip">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+          </button>
+          
+        </div>
+      </div>        
+      <a id='dwnldLnk' download='documento.pdf' style="display:none;"> </a>
+      <div id="containerCanvasVisualizar" [style.display]="!exibirImg ? 'none' : 'block'" class="text-center col-md-12" (click)="clicouImagem()" title="Clique na Imagem para aumentar/diminuir" rel="tooltip" >
+        <canvas [id]='docPara' style="margin: 10px;cursor: pointer;border-style: solid;border-color: gray;border-width: thin"></canvas>
+      </div>
+        <div style="text-align: center">
+
+        <div *ngIf="currentImage != null && exibirImg && ehPdf" class="btn-group" role="group" aria-label="..." style="text-align: center">
+          <button type="button" class="btn btn-default btn-navega" (click)="primeiraPagina()" title="Primeira Página" rel="tooltip" style="margin-top: 0px;">
+            <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-default btn-navega" (click)="paginaAnterior()" title="Página Anterior" rel="tooltip" style="margin-top: 0px;">
+            <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-default btn-navega" title="Página Atual" rel="tooltip" style="margin-top: 0px;">
+              <span aria-hidden="true">{{paginaCorrente}}</span>
+          </button>
+          <button type="button" class="btn btn-default btn-navega" title="Página Atual" rel="tooltip" style="margin-top: 0px;">
+              <span aria-hidden="true">/</span>
+          </button>
+          <button type="button" class="btn btn-default btn-navega" title="Página Atual" rel="tooltip" style="margin-top: 0px;">
+              <span aria-hidden="true">{{paginaFinal}}</span>
+          </button>
+      
+          <button type="button" class="btn btn-default btn-navega" (click)="proximaPagina()" title="Próxima Página" rel="tooltip" style="margin-top: 0px;">
+            <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+          </button>
+          <button type="button" class="btn btn-default btn-navega" (click)="ultimaPagina()" title="Primeira Página" rel="tooltip" style="margin-top: 0px;">
+            <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+  </div>
+
+
+  <div [(class)]="larguraTabela">
+
+      <div class="box-body table-responsive no-padding" *ngIf="currentImage != null && categorizar">
+          <table class="table table-form">
+            <tbody>
+              <tr class="dt-head-caixa">
+                <th>INFORMAÇÕES DO DOCUMENTO</th>
+              </tr>
+              <tr>
+                <td class="col-md-12">
+                  <div *ngIf="atualizou" class="alert alert-{{ tipoMensagem }} col-md-12" role="danger">
+                      {{mensagem}}
+                  </div> 
+                  <div >
+                    <form #f="ngForm" class="form-horizontal" id="FrmCadApenso" name="FrmCadDocumento">
+                        <p></p>
+                        <div class="row tabela" >
+                          <div class="col-md-6"  *ngIf="alteracao">
+                              <label for="icInativo" class="label-form">Documento Ativo</label>
+                          </div>
+                          <div class="col-md-6">
+                              <label for="icConfidencial" class="label-form">Confidencial</label>
+                          </div>
+                        </div>
+                        <div class="row tabela">
+                          <div class="col-md-6" *ngIf="alteracao">
+                              <p-dropdown class="campo-form" name="icInativo"  id="icInativo" [style]="{'width':'95%'}"  [options]="icInativo" [(ngModel)]="inativoSelecionado">
+                              
+                                </p-dropdown>
+                          </div>
+                          <div class="col-md-6">
+                              <p-dropdown class="campo-form" [disabled]="!perfilEscrita" name="icConfidencial"  [style]="{'width':'95%'}" id="icConfidencial"  (onChange)="mudouConfidencial()" [options]="tiposConfidencial" [(ngModel)]="confidencialSelecionado">
+                              
+                                </p-dropdown>
+                          </div>
+                        </div>
+                        <div class="row tabela">
+                            <div class="col-md-6">
+                                <label for="icInativo" class="label-form">Tipo Documento</label>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="icConfidencial" class="label-form">Origem Documento</label>
+                            </div>
+                        </div>
+                        <div class="row tabela">
+                          
+                          <div class="col-md-6">
+                              <p-dropdown class="campo-form" id="tipoDocumento" name="tipoDocumento" [style]="{'width':'95%'}" (onChange)="mudouTipo()" [options]="tiposDocumento" [(ngModel)]="tipoDocSelecionado">
+                                
+                              </p-dropdown>
+                          </div>
+                          <div class="col-md-6">
+                              <p-dropdown class="campo-form" id="origemDocumento" name="origemDocumento" [style]="{'width':'95%'}" [options]="origensDocumento" [(ngModel)]="origemDocSelecionado">
+                              
+                              </p-dropdown>
+                          </div>
+                        </div>
+                        <div class="row tabela">
+                            <div class="col-md-12">
+                                <label for="icInativo" class="label-form">Descrição Documento</label>
+                            </div>
+                        </div>
+                        <div class="row tabela">
+                          <div class="col-md-12" style="padding-right: 0px">
+                            <textarea pInputTextarea autoResize="false" rows="5" cols="55" class="form-control" id="descricao" [(ngModel)]="descDocumento" name="descricao" 
+                              placeholder="Descrição" style='min-height: 8em; min-width: 23em;' required minlength="3" maxlength="256" #descricao="ngModel"></textarea>
+                            <div *ngIf="!f.pristine && !descricao.valid && descricao.touched" class="alert alert-danger col-md-12">
+                              Descrição do documento deve ter no mínimo 3 caracteres!
+                            </div>
+                          </div>
+                        </div>
+          
+                        <div class="row tabela" *ngIf="!alteracao && documentos != undefined && documentos.length > 0">
+                            <div class="col-md-6">
+                                <label for="icInativo" class="label-form">Documento Substituto</label>
+                                
+                            </div>
+                            <div class="col-md-6" *ngIf="docSubstituto">
+                                <label for="icConfidencial" class="label-form">ID Doc. Substituído</label>
+                            </div>
+                        </div>
+          
+                        <div class="row tabela" *ngIf="!alteracao && documentos != undefined && documentos.length > 0">
+                          
+                          <div class="col-md-6" style="padding-left: 15%">
+                              <input type="checkbox" id="chkSubs" (click)="clickSubstituto()" [(ngModel)]="docSubstituto" name="chkSubs"/>
+                          </div>
+                          <div class="col-md-6" *ngIf="docSubstituto">
+                              <p-dropdown class="campo-form" id="docsCadastrados" name="docsCadastrados" [style]="{'width':'280px'}"  [options]="docsCadastrados" [(ngModel)]="idDocSubstituicao">
+                                
+                              </p-dropdown>
+                          </div>
+                        </div>
+          
+                        <div clas="row tabela" *ngIf="justSubs">
+                          <div class="col-md-12">
+                              <label for="justificativa" class="label-form">Justificativa Substituição</label>
+                          </div>
+          
+                        </div>
+                        <div class="row tabela" *ngIf="justSubs">
+                          <div  class="col-md-12" style="padding-right: 0px">
+                              <textarea pInputTextarea autoResize="false" rows="5" cols="55" class="form-control" id="justSubs" [(ngModel)]="entidade.justificativa_substituicao" name="justSubs" 
+                              placeholder="Justificativa Substituição" style='min-height: 8em; ' 
+                              [disabled]="alteracao" required minlength="3" maxlength="256" #justSubs="ngModel"></textarea>
+                            <div class="alert alert-danger col-md-4" *ngIf="!f.pristine && !justSubs.valid && justSubs.touched" class="alert alert-danger col-md-12">
+                              Justificativa de Substituição deve ter no mínimo 3 caracteres!
+                            </div>
+                          </div>
+            
+                        </div>
+                    
+                        <div class="row text-right no-padding tabela" style="margin-top: 10px">
+                            <button *ngIf="perfilLeitura && alteracao && currentImage != null" type="button" name="btnDownload" class="btn btn-primary btn-incluir" (click)="downloadArquivo()">DOWNLOAD</button>
+                            <button type="button" name="btnCancelar" (click)="cancelarOperacao(f)" class="btn btn-warning btn-cancelar">CANCELAR</button>
+                            <button *ngIf="alteracao && perfilEscrita" type="button" data-toggle="modal" data-target="#excDisp" name="btnDeletar" class="btn btn-danger btn-excluir">EXCLUIR</button>
+                            <button *ngIf="perfilEscrita" type="button" name="btnAlterarApenso" [disabled]="(!f.valid || tipoDocInvalido)" class="btn btn-primary btn-incluir" (click)="salvarDocumento(f)">{{labelIncAlt}}</button>
+                          </div>
+          
+                        <div #excDisp class="modal fade" id="excDisp" tabindex="-1" data-keyboard="false" data-backdrop="static">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title">Confirmação Exclusão Documento: ID ({{idDocumento}})</h4>
+                              </div>
+                              <div class="modal-body">
+                                <div class="box-body">
+                                  <form #fDel="ngForm" class="form-horizontal col-md-12" id="FrmDelDoc" name="FrmDelDoc">
+                                    <div class="form-group row" >
+                                      <label for="justDel" class="col-md-4 control-label">Justificativa Exclusão:</label>
+                                      <div class="col-md-7">
+                                          <textarea pInputTextarea autoResize="false" rows="5" cols="50" class="form-control" [(ngModel)]="justDel" id="justDel" name="justDel" 
+                                            placeholder="Justificativa Exclusão" style='min-height: 8em; min-width: 25em' 
+                                            required minlength="10" maxlength="256" #jd></textarea>
+                                          <div class="alert alert-danger col-md-4" *ngIf="!fDel.valid && !jd.valid && jd.touched" class="alert alert-danger col-md-12">
+                                            Justificativa de Exclusão deve ter no mínimo 10 caracteres!
+                                          </div>
+                                      </div>
+                                    </div>
+                                  
+                                  <div class="modal-footer">
+                                    <button type="button" data-dismiss="modal" (click)="cancelarModal()" class="btn btn-danger">Cancelar</button>
+                                    <button type="button" name="submitModal" (click)="deletarDocumento()" [disabled]="!fDel.valid" class="btn btn-primary">Excluir</button>
+                                  </div>
+                                </form>
+                                </div>
+                              </div>
+                            </div>
+                        </div>	
+                        </div>
+                            
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+  
+  </div>
+
+
+
+  <div class="box-body col-md-12" *ngIf="diminuiu" >
+  
+    <div class="filtro-global col-md-12" [style.display]="exibirFiltro">
+      
+      <input #gb type="text" pInputText size="50" placeholder="Filtro Global">
+      <i class="fa fa-search" style="margin:10px 10px 10px 10px"></i>
+      <input id="inputDocument" type="file" style="display:none" accept=".pdf" #inputFile (change)="fileChanged($event)"
+        ng2FileSelect [uploader]="uploader">
+      <button *ngIf="exibirBotao && perfilEscrita"  name="btn-add-contrato" class="btn btn-primary btn-novo-doc" (click)="insertDocuments(inputFile)"
+                          title="Adicionar Contrato" rel="tooltip" data-placement="top">NOVO DOCUMENTO</button>
+    </div>  
+    <div class="col-md-12 no-padding">
+      <p-dataTable (onRowSelect)="onRowSelect($event)" selectionMode="single" [(selection)]="documentoSelecionado"
+        [value]="objeto.documentos" emptyMessage="Não existem dados cadastrados" (onPage)="paginar($event)"
+          [globalFilter]="gb" [rowsPerPageOptions]="[5,10,15,20]" sortField="id" #dt [(rows)]="itensDisplay" [paginator]="true" >
+            <p-column field="tipo_documento.nome" header="TIPO DOCUMENTO" [style]="{'width':'35%','text-align':'left'}" ></p-column>
+            <p-column field="mime_type" header="FORMATO" [style]="{'width':'15%'}">
+              <ng-template let-col let-mime="rowData" pTemplate="body">
+                  <span [innerHTML]="mime[col.field] | formataMime"></span>
+              </ng-template>
+            </p-column>
+            <p-column *ngIf="true" field="data_hora_captura" [style]="{'width':'20%'}" header="DATA CAPTURA" ></p-column>
+            <p-column *ngIf="true" field="id" [style]="{'width':'20%'}" [sortable]="true" header="ID"></p-column>
+            <p-column *ngIf="true" field="documento_substituto" [style]="{'width':'15%'}" header="ID SUBSTITUTO"></p-column>
+            <p-column *ngIf="true" field="descricao_documento" [style]="{'width':'10%', 'display':'none'}" header="DESCRIÇÃO"></p-column>
+            <p-footer *ngIf="documentos != null && documentos.length > 0" >
+              {{infoRegistros}}
+            </p-footer>
+      </p-dataTable>
+    </div>
+  </div>
+
+
+</div>

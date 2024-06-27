@@ -1,0 +1,55 @@
+<div [style.max-width]="comprimentoMaximo">
+    <div class="text-center">
+      <div class="btn-group" role="group" aria-label="..." style="text-align:center">
+        
+        <button type="button" class="btn btn-default btn-navega" (click)="zoomUp()" title="Zoom+" rel="tooltip">
+          <span class="glyphicon glyphicon-zoom-in" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-default btn-navega" (click)="zoomDown()" title="Zoom-" rel="tooltip">
+          <span class="glyphicon glyphicon-zoom-out" aria-hidden="true"></span>
+        </button>
+        
+        <button type="button" class="btn btn-default btn-navega" (click)="turnLeft()" title="Girar Esquerda" rel="tooltip" >
+          <span class="fa fa-reply" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-default btn-navega" (click)="turnRight()" title="Girar Direita" rel="tooltip" >
+          <span class="fa fa-share" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-default btn-navega" (click)="showDefault()" title="Mostrar Padrão" rel="tooltip">
+          <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>        
+    
+    <div id="containerCanvasVisualizar"  [style.max-height]="alturaMaxima" class="text-center col-md-12 imagem-extracao">
+      <canvas id='canvasDoc' style="margin: 10px;border-style: solid;border-color: gray;border-width: thin"></canvas>
+    </div>
+      <div style="text-align: center">
+
+      <div *ngIf="currentImage != null && exibirImg && ehPdf" class="btn-group" role="group" aria-label="..." style="text-align: center">
+        <button type="button" class="btn btn-default btn-navega" (click)="primeiraPagina()" title="Primeira Página" rel="tooltip" style="margin-top: 0px;">
+          <span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-default btn-navega" (click)="paginaAnterior()" title="Página Anterior" rel="tooltip" style="margin-top: 0px;">
+          <span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-default btn-navega" title="Página Atual" rel="tooltip" style="margin-top: 0px;">
+            <span aria-hidden="true">{{paginaCorrente}}</span>
+        </button>
+        <button type="button" class="btn btn-default btn-navega" title="Página Atual" rel="tooltip" style="margin-top: 0px;">
+            <span aria-hidden="true">/</span>
+        </button>
+        <button type="button" class="btn btn-default btn-navega" title="Página Atual" rel="tooltip" style="margin-top: 0px;">
+            <span aria-hidden="true">{{paginaFinal}}</span>
+        </button>
+    
+        <button type="button" class="btn btn-default btn-navega" (click)="proximaPagina()" title="Próxima Página" rel="tooltip" style="margin-top: 0px;">
+          <span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+        </button>
+        <button type="button" class="btn btn-default btn-navega" (click)="ultimaPagina()" title="Primeira Página" rel="tooltip" style="margin-top: 0px;">
+          <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+</div>
+
